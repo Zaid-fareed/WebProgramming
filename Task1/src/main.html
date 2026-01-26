@@ -16,32 +16,77 @@
     <meta name="twitter:description" content="Discover unique plant art pieces and botanical photography in our online gallery.">    
 <style>
     .images1 {
-        height:250px;
-        width:500px;
+        height: 250px;
+        width: 20%;
+        border-radius: 5%;
     }
     .images2 {
-        height:250px;
-        width:300px;
+        height: 250px;  
+        width: 24%;
+        border-radius: 5%;
     }
+    /* .Header{
+        font-family: 'Arial', sans-serif;
+        /* color: #775B59; 
+        height: 100px;
+        /* background-color: #364958; 
+        margin: -2% -1% 0% -1%;
+        padding: 10px 0px 10px 0px;
+        text-align: center;
+        border-radius: 5%;
+    } */
+    .iSVG{
+        height:200px;
+        width: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        outline: 3px solid grey;
+    }
+    .Svgimage{
+        display: flex;
+        justify-content: center;
+        padding-top: 15px;
+    }
+    .image-grid{
+        padding-top: 15px;
+    }
+    body {
+            background-color: #55828B;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        .Header {
+            color: #531f1b;
+            height: 120px;
+            background-color: #364958;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+        }
+
+   
 </style>
 </head>
-<body style="background-color: beige;">
-    <h1 style="text-align: center;">Welcome to Plant Art Gallery</h1>
-    <nav>
-        <ul style="list-style-type: none; display: flex; justify-content: center; gap: 20px; padding: 0;">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="about.html">About Us</a></li>
-            <li><a href="contact.html">Contact</a></li>
-        </ul>
-    </nav>
+<body>
+    <main class="Header">
+        <h1 style="text-align: center;" >Welcome to Plant Art Gallery</h1>
+        <nav>
+            <ul style="list-style-type: none; display: flex; justify-content: center; gap: 20px; padding: 0;">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="feedback.html">Feedback</a></li>
+            </ul>
+        </nav>
+    </main>
     <main class="gallery">
-        <div class="image-grid" >
-            <img src="../images/images.jfif" class="images1">
-            <img src="../images/image3.jfif" class="images2">
-            <br>
-            <img src="../images/image4.jfif" class="images2">
-            <img src="../images/image2.jfif" class="images1">
+        <div class="Svgimage">
+            <svg height="200" width="300" xmlns="http://www.w3.org/2000/svg">
+                <image width="300" height="200" href="../images/SVGimage.svg" class="iSVG" />
+                Sorry, your browser does not support inline SVG.  
+            </svg>
         </div>
     </main>
     

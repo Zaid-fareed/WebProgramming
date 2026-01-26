@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gallery | Art Gallery of Plants</title>
+
+    <meta name="description" content="Browse our gallery of botanical art, plant photography, and nature-inspired visual creations.">
+    <meta name="author" content="Art Gallery of Plants">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="Gallery | Art Gallery of Plants">
+    <meta property="og:description" content="A visual collection of botanical art and plant photography.">
+    <meta property="og:type" content="website">
+
+    <style>
+        body {
+            background-color: #55828B;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        /* Header */
+        .Header {
+            color: #775B59;
+            height: 120px;
+            background-color: #364958;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #E9E3E6;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        /* Gallery Section */
+        .gallery-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .gallery-title {
+            text-align: center;
+            color: #E9E3E6;
+            margin-bottom: 25px;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .image-grid img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .image-grid img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="Header">
+        <h1>Art Gallery of Plants</h1>
+        <nav>
+            <ul>
+                <li><a href="main.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- GALLERY -->
+    <section class="gallery-container">
+        <h2 class="gallery-title">Our Plant Art Collection</h2>
+
+        <div class="image-grid">
+            <img src="../images/images.jfif" alt="Botanical plant artwork">
+            <img src="../images/image2.jfif" alt="Plant photography artwork">
+            <img src="../images/image3.jfif" alt="Nature inspired plant art">
+            <img src="../images/image4.jfif" alt="Floral botanical artwork">
+            <img src="../images/images.jfif" alt="Botanical art print">
+            <img src="../images/image3.jfif" alt="Green plant artwork">
+        </div>
+    </section>
+
+</body>
+</html>
