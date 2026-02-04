@@ -1,0 +1,131 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Art Gallery of Plants | Botanical Art & Plant Photography</title>
+
+    <meta name="description" content="Art Gallery of Plants – botanical art and plant photography.">
+    <meta name="author" content="Art Gallery of Plants">
+    <meta name="robots" content="index, follow">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #55828B;
+        }
+
+        .Header {
+            height: 100px;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #364958;
+            color: #FFFFFF;
+            border-radius: 5%;
+            margin-bottom :20px;
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+        }
+
+        .feedback {
+            max-height: 50vh;
+            margin-top: 25vh;
+        }
+
+        .feedback-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #E9E3E6;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .feedback-container h2 {
+            color: #364958;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .feedback-container form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .feedback-container label {
+            color: #333;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .feedback-container input,
+        .feedback-container textarea {
+            padding: 8px;
+            border: 2px solid #364958;
+            border-radius: 5px;
+            font-family: Arial, sans-serif;
+            font-size: 0.9em;
+        }
+
+        .feedback-container textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .feedback-container button {
+            padding: 10px;
+            background-color: #364958;
+            color: #E9E3E6;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .feedback-container button:hover {
+            background-color: #531f1b;
+        }
+    </style>
+</head>
+<body>
+<header class="Header">
+    <h1>Welcome to Plant Art Gallery</h1>
+    <nav>
+        <ul>
+            <li><a href="main.html">Home</a></li>
+            <li><a href="gallery.html">Gallery</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="feedback.html">Feedback</a></li>
+        </ul>
+    </nav>
+</header>
+<div class="feedback-container">
+            <h2>Send us Your Feedback</h2>
+            <form>
+                <label for="name">Name :</label>
+                <input type="text" id="name" name="name" required>
+
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="message">Message :</label>
+                <textarea id="message" name="message" required></textarea>
+
+                <button type="submit">Submit Feedback</button>
+            </form>
+</div>
+</body>
