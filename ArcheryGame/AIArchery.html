@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro Archery 2.0</title>
+<style>
+    /* --- CORE STYLES --- */
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 50%, #2E7D32 50%, #1B5E20 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        user-select: none;
+    }
+
+    /* --- UI OVERLAY --- */
+    #ui-layer {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 100;
+    }
+
+    .hud-panel {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: flex;
+        gap: 20px;
+    }
+
+    .stat-box {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 10px 20px;
+        border-radius: 12px;
+        border-bottom: 4px solid #aaa;
+        font-weight: 800;
+        font-size: 20px;
+        color: #333;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-width: 80px;
+    }
+
+    .stat-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        color: #666;
+        margin-bottom: 2px;
+    }
+
+    /* --- POWER BAR --- */
+    #power-container {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 20px;
+        background: #333;
+        border-radius: 10px;
+        border: 2px solid white;
+        overflow: hidden;
+        display: none; /* Hidden until dragging */
+    }
+
+    #power-fill {
+        height: 100%;
+        width: 0%;
+        background: linear-gradient(90deg, lime, yellow, red);
+        transition: width 0.1s linear;
+    }
+
+    /* --- WIND INDICATOR --- */
+    #wind-box {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: rgba(255,255,255,0.9);
+        border-radius: 50%;
+        border: 2px solid #333;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    #wind-arrow {
+        font-size: 30px;
+        font-weight: bold;
+        transform: rotate(0deg);
+        transition: transform 1s ease;
+    }
+
+    /* --- MENU SCREENS --- */
+    .screen-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        pointer-events: auto;
+        z-index: 200;
+    }
+
+    .menu-card {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        border: 4px solid #333;
+    }
+
+    h1 { margin: 0 0 10px 0; color: #333; font-size: 40px; }
+    p { margin: 0 0 30px 0; color: #666; }
+
+    .btn {
+        background: #FF9800;
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 5px;
+        transition: transform 0.1s;
+        border-bottom: 4px solid #E65100;
+    }
+    .btn:active { transform: translateY(4px); border-bottom: 0; }
+    .btn.secondary { background: #2196F3; border-bottom-color: #0D47A1; }
+
+    /* --- GAME OBJECTS --- */
+    #game-area {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+    }
+
+    #target {
+        position: absolute;
+        right: 150px;
+        top: 50%;
+        width: 80px;
+        height: 80px;
+        /* Advanced CSS Target */
+        background: radial-gradient(circle, 
+            #FFD700 0, #FFD700 15%, 
+            #D32F2F 15%, #D32F2F 30%, 
+            #0288D1 30%, #0288D1 45%, 
+            #333 45%, #333 60%, 
+            #FFF 60%, #FFF 100%);
+        border-radius: 50%;
+        box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+        z-index: 5;
+    }
+
+    #bow-system {
+        position: absolute;
+        left: 300px; /* UPDATED: Shifted from 100px to 300px */
+        top: 60%;
+        width: 0;
+        height: 0;
+        z-index: 10;
+    }
+
+    /* Wooden Bow Graphic */
+    .bow-graphic {
+        position: absolute;
+        top: -60px;
+        left: -20px;
+        width: 40px;
+        height: 120px;
+        border-right: 12px solid #5D4037;
+        border-top: 10px solid #8D6E63;
+        border-bottom: 10px solid #8D6E63;
+        border-radius: 0 60px 60px 0;
+        box-sizing: border-box;
+    }
+
+    .bow-string {
+        position: absolute;
+        top: 0;
+        left: -200px;
+        width: 200px;
+        height: 100%;
+        border-right: 2px solid #eee;
+        pointer-events: none;
+    }
+
+    /* Arrow Graphic */
+    #projectile {
+        position: absolute;
+        width: 90px;
+        height: 5px;
+        background: #3E2723;
+        display: none;
+        pointer-events: none;
+        z-index: 15;
+    }
+    #projectile::after {
+        /* Arrowhead */
+        content: '';
+        position: absolute;
+        right: -8px; top: -3px;
+        border-left: 10px solid #9E9E9E;
+        border-top: 5px solid transparent;
+        border-bottom: 5px solid transparent;
+    }
+    .fletching {
+        position: absolute;
+        left: 0; top: -3px;
+        width: 12px; height: 11px;
+        background: red;
+        clip-path: polygon(0 0, 100% 20%, 100% 80%, 0 100%);
+    }
+
+    /* Pop-up Score Animation */
+    .pop-score {
+        position: absolute;
+        color: gold;
+        font-weight: bold;
+        font-size: 30px;
+        text-shadow: 2px 2px 0 #000;
+        animation: floatUp 1s forwards;
+        pointer-events: none;
+        z-index: 20;
+    }
+
+    @keyframes floatUp {
+        0% { transform: translateY(0) scale(1); opacity: 1; }
+        100% { transform: translateY(-50px) scale(1.5); opacity: 0; }
+    }
+</style>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <div class="hud-panel">
+            <div class="stat-box">
+                <span class="stat-label">Score</span>
+                <span id="score-val">0</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-label">Time</span>
+                <span id="time-val">--</span>
+            </div>
+        </div>
+        
+        <div id="wind-box">
+            <span id="wind-arrow">➤</span>
+        </div>
+
+        <div id="power-container">
+            <div id="power-fill"></div>
+        </div>
+    </div>
+
+    <div id="start-screen" class="screen-overlay">
+        <div class="menu-card">
+            <h1>MASTER ARCHER</h1>
+            <p>Select your challenge</p>
+            <button class="btn" onclick="Game.init('practice')">PRACTICE MODE</button>
+            <button class="btn secondary" onclick="Game.init('timed')">TIME ATTACK (60s)</button>
+        </div>
+    </div>
+
+    <div id="game-over-screen" class="screen-overlay" style="display: none;">
+        <div class="menu-card">
+            <h1>GAME OVER</h1>
+            <p>Final Score: <span id="final-score">0</span></p>
+            <button class="btn" onclick="Game.resetToMenu()">MAIN MENU</button>
+        </div>
+    </div>
+
+    <div id="game-area">
+        <div id="target"></div>
+        
+        <div id="bow-system">
+            <div class="bow-graphic"></div>
+            <div class="bow-string" id="string-vis"></div>
+        </div>
+
+        <div id="projectile">
+            <div class="fletching"></div>
+        </div>
+    </div>
+
+<script>
+/**
+ * Game Configuration & Constants
+ */
+const Config = {
+    GRAVITY: 0.35,
+    MAX_DRAW: 150,
+    POWER_MULTIPLIER: 0.22,
+    WIND_CHANGE_RATE: 3, // Change wind every 3 shots
+    TARGET_SPEED_Y: 4
+};
+
+/**
+ * Main Game Controller
+ * Uses the Module pattern for cleaner code structure.
+ */
+const Game = {
+    // --- State Variables ---
+    state: {
+        mode: null, // 'practice' | 'timed'
+        score: 0,
+        timeLeft: 60,
+        isDragging: false,
+        isFlying: false,
+        shotsFired: 0,
+        windX: 0,
+        
+        // Target Logic
+        targetY: 300,
+        targetDir: 1,
+        
+        // Physics logic
+        arrowX: 0, arrowY: 0,
+        velX: 0, velY: 0,
+        
+        // Timers
+        physicsLoop: null,
+        gameTimer: null
+    },
+
+    // --- DOM Cache ---
+    dom: {
+        screens: {
+            start: document.getElementById('start-screen'),
+            end: document.getElementById('game-over-screen')
+        },
+        hud: {
+            score: document.getElementById('score-val'),
+            time: document.getElementById('time-val'),
+            finalScore: document.getElementById('final-score'),
+            powerBar: document.getElementById('power-container'),
+            powerFill: document.getElementById('power-fill'),
+            windArrow: document.getElementById('wind-arrow')
+        },
+        world: {
+            area: document.getElementById('game-area'),
+            bow: document.getElementById('bow-system'),
+            string: document.getElementById('string-vis'),
+            arrow: document.getElementById('projectile'),
+            target: document.getElementById('target')
+        }
+    },
+
+    /**
+     * Initialize Game Mode
+     */
+    init: function(selectedMode) {
+        this.state.mode = selectedMode;
+        this.resetState();
+        
+        // Hide screens
+        this.dom.screens.start.style.display = 'none';
+        this.dom.screens.end.style.display = 'none';
+
+        // Setup Timer for Time Attack
+        if (selectedMode === 'timed') {
+            this.state.timeLeft = 60;
+            this.dom.hud.time.innerText = 60;
+            this.state.gameTimer = setInterval(() => this.tickTimer(), 1000);
+        } else {
+            this.dom.hud.time.innerText = "∞";
+        }
+
+        // Start Physics Engine (Interval based, as requested)
+        // 16ms is roughly 60FPS
+        this.state.physicsLoop = setInterval(() => this.updateLoop(), 16);
+
+        this.randomizeWind();
+    },
+
+    /**
+     * Reset internal state for a new game
+     */
+    resetState: function() {
+        this.state.score = 0;
+        this.state.shotsFired = 0;
+        this.state.isFlying = false;
+        this.dom.hud.score.innerText = "0";
+        this.dom.world.arrow.style.display = "none";
+        
+        // Reset Target
+        this.state.targetY = window.innerHeight / 2;
+        this.dom.world.target.style.top = this.state.targetY + "px";
+        this.dom.world.target.innerHTML = ""; // Remove stuck arrows
+    },
+
+    resetToMenu: function() {
+        clearInterval(this.state.physicsLoop);
+        clearInterval(this.state.gameTimer);
+        this.dom.screens.start.style.display = 'flex';
+        this.dom.screens.end.style.display = 'none';
+    },
+
+    /**
+     * Main Game Loop (Physics & Logic)
+     */
+    updateLoop: function() {
+        this.updateTarget();
+        if (this.state.isFlying) {
+            this.updateArrowPhysics();
+        }
+    },
+
+    /**
+     * Target Movement Logic
+     */
+    updateTarget: function() {
+        const h = window.innerHeight;
+        // Move target
+        this.state.targetY += Config.TARGET_SPEED_Y * this.state.targetDir;
+
+        // Bounce check
+        if (this.state.targetY > h - 100 || this.state.targetY < 50) {
+            this.state.targetDir *= -1;
+        }
+        
+        this.dom.world.target.style.top = this.state.targetY + "px";
+    },
+
+    /**
+     * Arrow Physics Logic
+     */
+    updateArrowPhysics: function() {
+        // 1. Apply Velocity
+        this.state.arrowX += this.state.velX;
+        this.state.arrowY += this.state.velY;
+        
+        // 2. Apply Gravity & Wind
+        this.state.velY += Config.GRAVITY;
+        this.state.velX += (this.state.windX * 0.01); // Subtle wind drag
+
+        // 3. Calculate Rotation
+        const angle = Math.atan2(this.state.velY, this.state.velX);
+        const deg = angle * (180 / Math.PI);
+
+        // 4. Render
+        this.dom.world.arrow.style.left = this.state.arrowX + "px";
+        this.dom.world.arrow.style.top = this.state.arrowY + "px";
+        this.dom.world.arrow.style.transform = `rotate(${deg}deg)`;
+
+        // 5. Collision & Bounds
+        this.checkCollision();
+        this.checkBounds();
+    },
+
+    checkCollision: function() {
+        const aRect = this.dom.world.arrow.getBoundingClientRect();
+        const tRect = this.dom.world.target.getBoundingClientRect();
+
+        // Standard AABB Collision
+        if (
+            aRect.right > tRect.left + 20 && // Allow tip to penetrate
+            aRect.left < tRect.right &&
+            aRect.bottom > tRect.top &&
+            aRect.top < tRect.bottom
+        ) {
+            this.handleHit(aRect, tRect);
+        }
+    },
+
+    handleHit: function(arrowRect, targetRect) {
+        this.state.isFlying = false;
+
+        // --- ZONE SCORING ---
+        // Calculate distance from arrow tip to target center
+        const arrowTipY = arrowRect.top + (arrowRect.height/2);
+        const targetCenterY = targetRect.top + (targetRect.height/2);
+        const dist = Math.abs(arrowTipY - targetCenterY);
+        const maxRadius = targetRect.height / 2;
+        
+        // Determine points based on accuracy
+        let points = 0;
+        if (dist < maxRadius * 0.3) points = 10;      // Bullseye
+        else if (dist < maxRadius * 0.6) points = 5;  // Inner ring
+        else points = 2;                              // Outer ring
+
+        // Update Score
+        this.state.score += points;
+        this.dom.hud.score.innerText = this.state.score;
+        this.showFloatingText(points, arrowRect.left, arrowRect.top);
+
+        // --- STICKY LOGIC ---
+        // 1. Reparent arrow to target so it moves with it
+        const stickY = this.state.arrowY - this.dom.world.target.offsetTop;
+        const stickX = this.state.arrowX - this.dom.world.target.offsetLeft;
+
+        this.dom.world.target.appendChild(this.dom.world.arrow);
+        this.dom.world.arrow.style.left = stickX + "px";
+        this.dom.world.arrow.style.top = stickY + "px";
+
+        // 2. Prepare for next shot
+        setTimeout(() => this.resetArrow(), 1000);
+    },
+
+    resetArrow: function() {
+        // Check game over
+        if (this.state.mode === 'timed' && this.state.timeLeft <= 0) return;
+
+        // Create a NEW arrow element for the next shot (leave old one stuck)
+        const newArrow = document.createElement('div');
+        newArrow.id = 'projectile';
+        newArrow.innerHTML = '<div class="fletching"></div>';
+        this.dom.world.area.appendChild(newArrow);
+        
+        // Update DOM reference
+        this.dom.world.arrow = newArrow; 
+        
+        // Wind Mechanics
+        this.state.shotsFired++;
+        if (this.state.shotsFired % Config.WIND_CHANGE_RATE === 0) {
+            this.randomizeWind();
+        }
+    },
+
+    checkBounds: function() {
+        const h = window.innerHeight;
+        const w = window.innerWidth;
+        
+        // Floor hit or fly off screen
+        if (this.state.arrowY > h || this.state.arrowX > w || this.state.arrowX < -100) {
+            this.state.isFlying = false;
+            this.dom.world.arrow.style.display = "none";
+            this.resetArrow();
+        }
+    },
+
+    tickTimer: function() {
+        this.state.timeLeft--;
+        this.dom.hud.time.innerText = this.state.timeLeft;
+        
+        if (this.state.timeLeft <= 0) {
+            this.endGame();
+        }
+    },
+
+    endGame: function() {
+        clearInterval(this.state.physicsLoop);
+        clearInterval(this.state.gameTimer);
+        this.dom.hud.finalScore.innerText = this.state.score;
+        this.dom.screens.end.style.display = 'flex';
+    },
+
+    randomizeWind: function() {
+        // Random value between -5 and 5
+        this.state.windX = (Math.random() * 10) - 5;
+        
+        // Update UI Arrow
+        const rotation = this.state.windX * 10; // Multiply for visual effect
+        this.dom.hud.windArrow.style.transform = `rotate(${rotation}deg)`;
+        
+        // Color code wind strength
+        const intensity = Math.abs(this.state.windX);
+        this.dom.hud.windArrow.style.color = intensity > 3 ? 'red' : 'black';
+    },
+
+    showFloatingText: function(points, x, y) {
+        const el = document.createElement('div');
+        el.className = 'pop-score';
+        el.innerText = "+" + points;
+        el.style.left = x + 'px';
+        el.style.top = y + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1000);
+    },
+    
+    // --- Input Handling ---
+    handleInput: {
+        start: function(e) {
+            if (Game.state.isFlying) return;
+            // Prevent interaction with stuck arrows
+            if (Game.dom.world.arrow.parentElement === Game.dom.world.target) return;
+
+            Game.state.isDragging = true;
+            Game.dom.world.arrow.style.display = "block";
+            Game.dom.hud.powerBar.style.display = "block";
+            Game.handleInput.move(e);
+        },
+        
+        move: function(e) {
+            if (!Game.state.isDragging) return;
+            
+            const rect = Game.dom.world.bow.getBoundingClientRect();
+            const bowX = rect.left;
+            const bowY = rect.top;
+            
+            const dx = bowX - e.clientX;
+            const dy = bowY - e.clientY;
+            
+            // Aiming Math
+            const aimAngle = Math.atan2(dy, dx);
+            const deg = aimAngle * (180 / Math.PI);
+            
+            // Limit Draw Distance
+            const rawDist = Math.sqrt(dx*dx + dy*dy);
+            const drawDist = Math.min(rawDist, Config.MAX_DRAW);
+            
+            // Visual Updates
+            Game.dom.world.bow.style.transform = `rotate(${deg}deg)`;
+            
+            // Arrow placement on string
+            const ax = bowX - 45 - (Math.cos(aimAngle) * drawDist);
+            const ay = bowY - 3 - (Math.sin(aimAngle) * drawDist);
+            
+            Game.dom.world.arrow.style.left = ax + "px";
+            Game.dom.world.arrow.style.top = ay + "px";
+            Game.dom.world.arrow.style.transform = `rotate(${deg}deg)`;
+
+            // Update UI Power Bar
+            const percent = (drawDist / Config.MAX_DRAW) * 100;
+            Game.dom.hud.powerFill.style.width = percent + "%";
+
+            // Store values for release
+            Game.tempAim = { angle: aimAngle, dist: drawDist };
+        },
+        
+        end: function() {
+            if (!Game.state.isDragging) return;
+            Game.state.isDragging = false;
+            Game.dom.hud.powerBar.style.display = "none";
+            
+            if (Game.tempAim && Game.tempAim.dist > 20) {
+                Game.fire(Game.tempAim);
+            } else {
+                Game.dom.world.arrow.style.display = "none";
+            }
+        }
+    },
+    
+    fire: function(aimData) {
+        this.state.isFlying = true;
+        
+        // Set initial physics state
+        const rect = this.dom.world.bow.getBoundingClientRect();
+        this.state.arrowX = rect.left - 45;
+        this.state.arrowY = rect.top - 3;
+        
+        const speed = aimData.dist * Config.POWER_MULTIPLIER;
+        this.state.velX = Math.cos(aimData.angle) * speed;
+        this.state.velY = Math.sin(aimData.angle) * speed;
+    }
+};
+
+// --- BIND EVENTS ---
+const area = document.getElementById('game-area');
+
+area.addEventListener('mousedown', (e) => Game.handleInput.start(e));
+window.addEventListener('mousemove', (e) => Game.handleInput.move(e));
+window.addEventListener('mouseup', () => Game.handleInput.end());
+
+</script>
+</body>
+</html>

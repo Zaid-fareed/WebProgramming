@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag the Bucket</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; 
+        }
+
+        .Box {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .fire img {
+            width: 40vw;
+            height: 50vh;
+            position: absolute;
+            bottom: 0;
+            left: 30vw;
+            margin: 0; 
+            z-index: 1; /* Behind bucket */
+        }
+
+        #bucket {
+            width: 200px; /* Adjusted size slightly */
+            height: auto;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            cursor: grab;
+            z-index: 1000; 
+            user-select: none;
+            transition: transform 0.3s; /* Smooth rotation */
+        }
+
+        #bucket:active {
+            cursor: grabbing;
+        }
+
+        /* Class to rotate bucket when pouring */
+        .tipping {
+            transform: rotate(-45deg);
+        }
+
+        /* Water Drop Style */
+        .water-drop {
+            position: absolute;
+            width: 10px;
+            height: 25px;
+            background-color: #3498db;
+            border-radius: 50%;
+            z-index: 500;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="Box">
+        
+        <img id="bucket" src="../WaterFire/img/watrebucket.jpg" alt="Water Bucket">
+        
+        <div class="fire">
+            <img class="fire-gif" src="../WaterFire/img/fire.gif" alt="Fire">
+        </div>
+
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let isDragging = false;
+            let bucket = $('#bucket');
+            let fire = $('.fire img');
+            let fireExtinguished = false;
+
+            bucket.mousedown(function(e) {
+                if(fireExtinguished) return; // Stop dragging if fire is out
+                isDragging = true;
+                e.preventDefault(); 
+            });
+
+            $(document).mousemove(function(e) {
+                if (isDragging) {
+                    bucket.css({
+                        'top': e.pageY - 50 + 'px',
+                        'left': e.pageX - 100 + 'px' // -100 to center cursor on a 200px wide bucket
+                    });
+                }
+            });
+
+            $(document).mouseup(function() {
+                if (!isDragging) return;
+                isDragging = false;
+
+                // 1. COLLISION DETECTION
+                // Get positions of Bucket and Fire
+                let bRect = bucket[0].getBoundingClientRect();
+                let fRect = fire[0].getBoundingClientRect();
+
+                // Check if Bucket is overlapping the Fire horizontally
+                // and if the bucket is somewhat above the bottom of the screen
+                if (bRect.right > fRect.left && 
+                    bRect.left < fRect.right && 
+                    bRect.top < fRect.bottom) {
+                    
+                    pourWater();
+                }
+            });
+
+            function pourWater() {
+                fireExtinguished = true;
+
+                // 1. Tilt the bucket
+                bucket.addClass('tipping');
+
+                // 2. Create Water Drops Loop
+                let dropCount = 0;
+                let interval = setInterval(function(){
+                    dropCount++;
+                    
+                    // Create a drop
+                    let drop = $('<div class="water-drop"></div>');
+                    
+                    // Start drop at bucket's position
+                    let bPos = bucket.offset();
+                    drop.css({
+                        top: bPos.top + 100, 
+                        left: bPos.left + 20 + (Math.random() * 50) // Randomize horizontal start slightly
+                    });
+
+                    $('body').append(drop);
+
+                    // Animate drop falling
+                    drop.animate({
+                        top: '100vh', // Fall to bottom
+                        opacity: 0
+                    }, 800, function(){
+                        $(this).remove(); // Remove from HTML when done
+                    });
+
+                    // Stop creating drops after 20 drops
+                    if(dropCount > 20) {
+                        clearInterval(interval);
+                        // Reset bucket tilt after pouring
+                        setTimeout(() => bucket.removeClass('tipping'), 500);
+                    }
+
+                }, 50); // New drop every 50ms
+
+                // 3. Fade out the fire
+                // Wait 500ms for water to hit, then fade
+                setTimeout(function(){
+                    $('.fire img').fadeOut(2000, function(){
+                        alert("Fire Extinguished!");
+                    });
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
