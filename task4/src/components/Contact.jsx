@@ -17,7 +17,7 @@ export default function Contact() {
     padding: '12px',
     borderRadius: '8px',
     border: 'none',
-    backgroundColor: '#646cff',
+    backgroundColor: '#202020',
     color: 'white',
     fontWeight: 'bold',
     cursor: 'pointer',
@@ -39,19 +39,18 @@ export default function Contact() {
 
   return (
     <div style={{ 
-      background: '#2a2a2a', 
+      background: '#272727', 
       padding: '30px', 
       borderRadius: '15px', 
       width: '100%', 
-      maxWidth: '400px',
-      boxShadow: '0 10px 25px rgba(0,0,0,0.5)'
+      maxWidth: '400px'
     }}>
-      <h2 style={{ marginBottom: '20px', textAlign: 'center' }}>Contact Us</h2>
+      <h2 style={{ marginBottom: '20px', textAlign: 'center' , color: 'blue'}}>Contact Us</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <input name="name" placeholder="Name" style={inputStyle} value={formData.name} onChange={handleChange} required />
         <input name="email" type="email" placeholder="Email" style={inputStyle} value={formData.email} onChange={handleChange} required />
         <textarea name="message" placeholder="Your Message" style={{ ...inputStyle, minHeight: '100px' }} value={formData.message} onChange={handleChange} required />
-        <button type="submit" style={buttonStyle} onMouseOver={(e) => e.target.style.backgroundColor = '#535bf2'} onMouseOut={(e) => e.target.style.backgroundColor = '#646cff'}>
+        <button type="submit" style={buttonStyle} onMouseOver={(e) => e.target.style.backgroundColor = '#7d7d7d'} onMouseOut={(e) => e.target.style.backgroundColor = '#202020'}>
           Send Message
         </button>
       </form>

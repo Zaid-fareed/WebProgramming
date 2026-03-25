@@ -6,20 +6,20 @@ import Contact from './components/Contact';
 function App() {
   const headerStyle = {
     background: '#242424',
-    padding: '1.5rem',
+    padding: '30px 0px',
     display: 'flex',
     justifyContent: 'center',
-    gap: '30px',
+    gap: '50px',
     boxShadow: '0 4px 6px rgba(0,0,0,0.3)',
     position: 'sticky',
     top: 0
   };
 
   const linkStyle = {
-    color: '#646cff',
+    color: 'blue',
     textDecoration: 'none',
-    fontSize: '1.1rem',
-    fontWeight: '600',
+    fontSize: '20px',
+    fontWeight: 'bold',
     transition: 'color 0.3s'
   };
 

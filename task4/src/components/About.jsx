@@ -1,8 +1,8 @@
 export default function About() {
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>📖 About This Project</h2>
-      <p>This app demonstrates React Router for navigation and State Management for forms.</p>
+    <div style={{ textAlign: 'center', marginTop: '20px', padding: '20px' }}>
+      <h1 style={{ color: "blue"}}>About This Project</h1>
+      <p>There is something about this project, that i don't know yet.</p>
     </div>
   );
 }
