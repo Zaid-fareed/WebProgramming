@@ -1,24 +1,18 @@
 import React from 'react';
 
 const GameOver = ({ runs, wickets, ballsBowled, onRestart }) => {
-  // Calculate strike rate just for fun summary stats
   const strikeRate = ballsBowled > 0 ? ((runs / ballsBowled) * 100).toFixed(2) : 0;
-
   return (
     <div style={styles.overlay}>
       <div style={styles.card}>
-        <h2 style={styles.title}>🏏 INNINGS COMPLETE!</h2>
-        
-        {/* Match Summary Stats */}
+        <h2 style={styles.title}>INNINGS COMPLETE!</h2>
         <div style={styles.stats}>
           <p><strong>Final Score:</strong> {runs} / {wickets}</p>
           <p><strong>Balls Played:</strong> {ballsBowled}</p>
           <p><strong>Strike Rate:</strong> {strikeRate}</p>
         </div>
-
-        {/* Play Again Button */}
         <button style={styles.btn} onClick={onRestart}>
-          🔄 PLAY AGAIN
+          PLAY AGAIN
         </button>
       </div>
     </div>
@@ -32,11 +26,11 @@ const styles = {
     left: 0,
     width: '100vw',
     height: '100vh',
-    backgroundColor: 'rgba(0, 0, 0, 0.85)', // Dark semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.85)', 
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1000, // Makes sure it sits on top of everything else
+    zIndex: 1000, 
   },
   card: {
     backgroundColor: '#1a1a2e',

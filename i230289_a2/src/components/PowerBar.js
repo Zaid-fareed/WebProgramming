@@ -88,7 +88,7 @@ const PowerBar = ({ mode, hit, lock }) => {
 };
 
 const s = {
-  box: { marginTop: '10px', background: '#222', padding: '15px', borderRadius: '8px', textAlign: 'center' },
+  box: { marginTop: '10px', textAlign: 'center' },
   title: { margin: '0 0 10px 0', color: '#fff', fontSize: '16px', letterSpacing: '1px' },
   bar: { display: 'flex', height: '35px', border: '2px solid white', position: 'relative', marginBottom: '15px' },
   seg: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontWeight: 'bold' },

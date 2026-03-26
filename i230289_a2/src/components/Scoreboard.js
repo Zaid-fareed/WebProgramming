@@ -14,10 +14,10 @@ const Scoreboard = ({ runs, wickets, ballsLeft, totalBalls, maxWickets }) => {
           <span>OVERS</span>
           <strong>{oversDisplay} / {totalBalls / 6}</strong>
         </div>
-        <div style={styles.statBox}>
+        {/* <div style={styles.statBox}>
           <span>BALLS LEFT</span>
           <strong>{ballsLeft}</strong>
-        </div>
+        </div> */}
         <div style={styles.statBox}>
           <span>WICKETS LEFT</span>
           <strong>{maxWickets - wickets}</strong>
@@ -30,15 +30,15 @@ const Scoreboard = ({ runs, wickets, ballsLeft, totalBalls, maxWickets }) => {
 const styles = {
   container: {
     backgroundColor: '#0f3460',
-    padding: '10px 20px',
+    // padding: '10px 20px',
     borderRadius: '10px',
     textAlign: 'center',
     width: '100%',
     // maxWidth: '600px',
-    boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
+    // boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
   },
   score: {
-    fontSize: '36px',
+    fontSize: '30px',
     margin: '0 0 10px 0',
     color: '#fff',
     letterSpacing: '2px',

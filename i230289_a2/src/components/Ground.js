@@ -18,19 +18,17 @@ const Ground = ({ isAnimating, resultText, onAnimEnd }) => {
 
         const draw = () => {
             ctx.clearRect(0, 0, 600, 240);
-
             ctx.fillStyle = '#87CEEB'; ctx.fillRect(0, 0, 600, 110);
-            ctx.fillStyle = '#4CAF50'; ctx.fillRect(0, 110, 600, 130);
-            ctx.fillStyle = '#DEB887'; ctx.fillRect(100, 110, 400, 80);
+            ctx.fillStyle = '#4CAF50'; ctx.fillRect(0, 110, 600, 170);
+            ctx.fillStyle = '#DEB887'; ctx.fillRect(100, 110, 410, 80);
             ctx.fillStyle = 'white'; ctx.fillRect(120, 110, 5, 80); ctx.fillRect(480, 110, 5, 80);
-
             ctx.fillStyle = 'white'; ctx.strokeStyle = '#333'; ctx.lineWidth = 1;
             ctx.fillRect(105, 130, 3, 30); ctx.strokeRect(105, 130, 3, 30);
             ctx.fillRect(108, 125, 3, 30); ctx.strokeRect(108, 125, 3, 30);
             ctx.fillRect(111, 120, 3, 30); ctx.strokeRect(111, 120, 3, 30);
-            ctx.fillRect(490, 130, 3, 25); ctx.strokeRect(490, 130, 3, 25);
-            ctx.fillRect(494, 125, 3, 25); ctx.strokeRect(494, 125, 3, 25);
-            ctx.fillRect(498, 120, 3, 25); ctx.strokeRect(498, 120, 3, 25);
+            ctx.fillRect(490, 120, 3, 30); ctx.strokeRect(490, 120, 3, 30);
+            ctx.fillRect(494, 125, 3, 30); ctx.strokeRect(494, 125, 3, 30);
+            ctx.fillRect(498, 130, 3, 30); ctx.strokeRect(498, 130, 3, 30);
 
             ctx.fillStyle = '#111'; ctx.strokeStyle = '#111'; ctx.lineWidth = 2;
             ctx.beginPath(); ctx.arc(130, 80, 10, 0, Math.PI * 2); ctx.fill();
@@ -91,14 +89,14 @@ const Ground = ({ isAnimating, resultText, onAnimEnd }) => {
         draw();
 
         return () => cancelAnimationFrame(animId);
-    }, [isAnimating, resultText]);
+    }, [isAnimating, resultText, onAnimEnd]);
 
     return (
     <div style={{ width: '100%' }}>
       <canvas 
         ref={canvasRef} 
         width={600} 
-        height={240} 
+        height={280} 
         style={{ 
           border: '3px solid #444', 
           borderRadius: '8px', 
