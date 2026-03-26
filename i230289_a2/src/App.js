@@ -7,6 +7,7 @@ import PowerBar from './components/PowerBar';
 import GameOver from './components/GameOver';
 
 function App() {
+  // Variable Declaration for future use
   const [battingMode, setBattingMode] = useState('aggressive');
   
   const [runs, setRuns] = useState(0);
@@ -20,6 +21,7 @@ function App() {
   const maxWickets = 2;
   const isGameOver = ballsBowled >= totalBalls || wickets >= maxWickets;
 
+  // Resets the game to initial state
   const resetGame = () => {
     setRuns(0);
     setWickets(0);
@@ -29,12 +31,14 @@ function App() {
     setIsAnimating(false);
   };
 
+  // Handles the shot result from PowerBar and triggers animation
   const handleShot = (result) => {
     if (isGameOver || isAnimating) return;
     setShotResult(result);
     setIsAnimating(true);
   };
 
+  // Updates the scoreboard and state after the shot animation completes
   const handleAnimationComplete = useCallback(() => {
     if (shotResult) {
       if (shotResult.label === 'W') {
@@ -47,10 +51,11 @@ function App() {
     setIsAnimating(false);
   }, [shotResult]);
 
+  // Main render function for the app
   return (
     <div className="App">
       <h2 style={{ fontSize: '30px', marginBottom: '10px' }}>2D Cricket Game</h2>
-      
+      {/* Divides the game area for canvas and scoreboard */}
       <div className="gameContainer">
         
         <div className="leftCol">
@@ -77,15 +82,13 @@ function App() {
           />
         </div>
       </div>
-      
+      {/* Batting Style and Power Bar */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: '600px', margin: '0 auto' }}>
-        
         <BattingStyle 
             selected={battingMode} 
             onChange={setBattingMode} 
             disabled={isGameOver || isAnimating} 
         />
-        
         <div className="powerBarContainer" style={{ width: '100%', marginTop: '15px' }}>
           <PowerBar 
               mode={battingMode} 
@@ -94,7 +97,7 @@ function App() {
           />
         </div>
       </div>
-
+    {/* Calls GameOver component when the game is over */}
       {isGameOver && (
         <GameOver 
           runs={runs} 

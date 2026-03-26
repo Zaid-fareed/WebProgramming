@@ -1,5 +1,6 @@
 import React from 'react';
 
+// Component to display game summary and restart option when the game is over
 const GameOver = ({ runs, wickets, ballsBowled, onRestart }) => {
   const strikeRate = ballsBowled > 0 ? ((runs / ballsBowled) * 100).toFixed(2) : 0;
   return (
@@ -19,6 +20,7 @@ const GameOver = ({ runs, wickets, ballsBowled, onRestart }) => {
   );
 };
 
+// Inline styles for the Gameover
 const styles = {
   overlay: {
     position: 'fixed',

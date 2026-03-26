@@ -1,11 +1,11 @@
 import React from 'react';
-
+// Displaus the scoreboard with current details of the game
 const Scoreboard = ({ runs, wickets, ballsLeft, totalBalls, maxWickets }) => {
   const ballsBowled = totalBalls - ballsLeft;
   const overFull = Math.floor(ballsBowled / 6);
   const ballsInOver = ballsBowled % 6;
+  // Calculates the overs bowled and formats it for display
   const oversDisplay = `${overFull}.${ballsInOver}`;
-
   return (
     <div style={styles.container}>
       <h1 style={styles.score}>{runs} / {wickets}</h1>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+// Handles the power bar display
 const chances = {
   aggressive: [
     { label: 'W', r: -1, p: 0.30, c: '#ff4d4d' },
@@ -20,7 +21,7 @@ const chances = {
     { label: '6', r: 6,  p: 0.02, c: '#9370DB' }
   ]
 };
-
+// Displays and handles the interaction with the power bar 
 const PowerBar = ({ mode, hit, lock }) => {
   const [pos, setPos] = useState(0);
   const req = useRef();
@@ -31,30 +32,30 @@ const PowerBar = ({ mode, hit, lock }) => {
   useEffect(() => {
     const move = () => {
       if (lock) return;
-
+      // Updates the position of slider and changes direction if it hits the enda 
       setPos((old) => {
         let nxt = old + 0.045 * dir.current; 
         if (nxt >= 1) { nxt = 1; dir.current = -1; }
         else if (nxt <= 0) { nxt = 0; dir.current = 1; }
         return nxt;
       });
-
+      // Schedule the next frame
       req.current = requestAnimationFrame(move);
     };
 
     if (!lock) {
       req.current = requestAnimationFrame(move);
     }
-
+    
     return () => cancelAnimationFrame(req.current);
   }, [lock]);
 
+  // Shot result based on current position of slider when button is clicked
   const clk = () => {
     if (lock) return;
 
     let sum = 0;
     let val = arr[arr.length - 1];
-
     for (let i = 0; i < arr.length; i++) {
       sum += arr[i].p;
       if (pos <= sum) {
@@ -62,22 +63,25 @@ const PowerBar = ({ mode, hit, lock }) => {
         break;
       }
     }
-
+    // Passes the shot result to App component to update the game state
     hit(val);
   };
 
   return (
+    // Main container for the power bar and button
     <div style={s.box}>
       <h4 style={s.title}>POWER BAR</h4>
       <div style={s.bar}>
+        {/* Draws the segments of power bar */}
         {arr.map((itm, i) => (
           <div key={i} style={{ width: `${itm.p * 100}%`, background: itm.c, ...s.seg }}>
             {itm.label}
           </div>
         ))}
+        {/* Slider pointer */}
         <div style={{ ...s.ptr, left: `${pos * 100}%` }} />
       </div>
-
+      {/* This is the button to play the shot */}
       <div style={s.buttonWrapper}>
         <button onClick={clk} disabled={lock} style={{ ...s.btn, opacity: lock ? 0.5 : 1 }}>
           PLAY SHOT
@@ -87,6 +91,7 @@ const PowerBar = ({ mode, hit, lock }) => {
   );
 };
 
+// Styles for the PowerBar component
 const s = {
   box: { marginTop: '10px', textAlign: 'center' },
   title: { margin: '0 0 10px 0', color: '#fff', fontSize: '16px', letterSpacing: '1px' },

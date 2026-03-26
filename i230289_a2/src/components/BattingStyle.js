@@ -5,7 +5,7 @@ const BattingStyle = ({ selected, onChange, disabled }) => {
     return (
         <div style={styles.container}>
             <p style={styles.label}>SELECT BATTING STYLE:</p>
-            
+            {/* Create buttons for each batting style */}
             <div style={styles.buttonRow}>
                 <button 
                     disabled={disabled}
