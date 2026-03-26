@@ -1,0 +1,25 @@
+# Dependencies - very large folder, never commit this
+node_modules/
+
+# Build output - generated files, not source code
+build/
+
+# Environment variables - sensitive info
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Editor files - personal settings, not project files
+.vscode/
+.idea/
+
+# OS files - Mac/Windows junk files
+.DS_Store
+Thumbs.db
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
