@@ -34,7 +34,7 @@ const styles = {
     borderRadius: '10px',
     textAlign: 'center',
     width: '100%',
-    maxWidth: '600px',
+    // maxWidth: '600px',
     boxShadow: '0 4px 8px rgba(0,0,0,0.3)',
   },
   score: {

@@ -68,7 +68,7 @@ const PowerBar = ({ mode, hit, lock }) => {
 
   return (
     <div style={s.box}>
-      <h4>POWER BAR</h4>
+      <h4 style={s.title}>POWER BAR</h4>
       <div style={s.bar}>
         {arr.map((itm, i) => (
           <div key={i} style={{ width: `${itm.p * 100}%`, background: itm.c, ...s.seg }}>
@@ -78,18 +78,23 @@ const PowerBar = ({ mode, hit, lock }) => {
         <div style={{ ...s.ptr, left: `${pos * 100}%` }} />
       </div>
 
-      <button onClick={clk} disabled={lock} style={{ padding: '10px 20px', cursor: 'pointer' }}>
-        PLAY SHOT
-      </button>
+      <div style={s.buttonWrapper}>
+        <button onClick={clk} disabled={lock} style={{ ...s.btn, opacity: lock ? 0.5 : 1 }}>
+          PLAY SHOT
+        </button>
+      </div>
     </div>
   );
 };
 
 const s = {
-  box: { marginTop: '20px', background: '#222', padding: '15px' },
-  bar: { display: 'flex', height: '35px', border: '2px solid white', position: 'relative', marginBottom: '15px', marginTop: '10px' },
+  box: { marginTop: '10px', background: '#222', padding: '15px', borderRadius: '8px', textAlign: 'center' },
+  title: { margin: '0 0 10px 0', color: '#fff', fontSize: '16px', letterSpacing: '1px' },
+  bar: { display: 'flex', height: '35px', border: '2px solid white', position: 'relative', marginBottom: '15px' },
   seg: { height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontWeight: 'bold' },
-  ptr: { position: 'absolute', top: -5, bottom: -5, width: '6px', background: 'white', border: '1px solid black', transform: 'translateX(-50%)' }
+  ptr: { position: 'absolute', top: -5, bottom: -5, width: '6px', background: 'white', border: '1px solid black', transform: 'translateX(-50%)' },
+  buttonWrapper: { display: 'flex', justifyContent: 'center' },
+  btn: { padding: '10px 25px', cursor: 'pointer', backgroundColor: '#e94560', color: 'white', border: 'none', borderRadius: '5px', fontWeight: 'bold', fontSize: '16px' }
 };
 
 export default PowerBar;
