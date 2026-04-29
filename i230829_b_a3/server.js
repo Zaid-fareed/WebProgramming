@@ -8,9 +8,8 @@ const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-// Define the limiter
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
+  windowMs: 1 * 60 * 1000,
   max: 50, 
   message: "Too many requests, please try again later.",
   standardHeaders: true,
@@ -20,7 +19,6 @@ const limiter = rateLimit({
 
 app.prepare().then(() => {
   const httpServer = createServer((req, res) => {
-    // FIX: Apply the limiter manually to each request
     limiter(req, res, () => {
       const parsedUrl = parse(req.url, true);
       handle(req, res, parsedUrl);

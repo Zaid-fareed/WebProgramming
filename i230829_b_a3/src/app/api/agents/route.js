@@ -9,7 +9,6 @@ export async function GET() {
     await connectMongo();
     const session = await getServerSession(authOptions);
     
-    // Only Admins should be able to see the full list of agents
     if (!session || session.user.role !== "Admin") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }

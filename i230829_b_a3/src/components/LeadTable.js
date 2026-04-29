@@ -6,7 +6,6 @@ export default function LeadTable({ leads, onUpdate, isAdmin = false }) {
   const [agents, setAgents] = useState([]);
   const [selectedLeadId, setSelectedLeadId] = useState(null);
 
-  // Fetch agents only for Admin
   useEffect(() => {
     if (isAdmin) {
       fetch("/api/agents")
@@ -15,7 +14,6 @@ export default function LeadTable({ leads, onUpdate, isAdmin = false }) {
     }
   }, [isAdmin]);
 
-  // --- ADD THESE FUNCTIONS BACK ---
   const handleAssign = async (leadId, agentId) => {
     try {
       const res = await fetch(`/api/leads/${leadId}`, {
@@ -24,7 +22,7 @@ export default function LeadTable({ leads, onUpdate, isAdmin = false }) {
         body: JSON.stringify({ assignedTo: agentId }),
       });
       if (res.ok) {
-        onUpdate(); // Refreshes the table
+        onUpdate();
       }
     } catch (error) {
       console.error("Assignment error:", error);
@@ -36,19 +34,18 @@ export default function LeadTable({ leads, onUpdate, isAdmin = false }) {
       try {
         const res = await fetch(`/api/leads/${id}`, { method: "DELETE" });
         if (res.ok) {
-          onUpdate(); // Refreshes the table
+          onUpdate();
         }
       } catch (error) {
         console.error("Delete error:", error);
       }
     }
   };
-  // --------------------------------
 
   return (
-    <div className="overflow-x-auto bg-white rounded-lg shadow">
-      <table className="w-full text-left border-collapse">
-        <thead className="bg-gray-200">
+    <div className="overflow-x-auto bg-white">
+      <table className="w-full text-left">
+        <thead className="bg-gray-100">
           <tr>
             <th className="p-3 font-semibold text-gray-700">Name</th>
             <th className="p-3 font-semibold text-gray-700">Priority</th>
@@ -59,7 +56,7 @@ export default function LeadTable({ leads, onUpdate, isAdmin = false }) {
         </thead>
         <tbody>
           {leads.map((lead) => (
-            <tr key={lead._id} className="hover:bg-gray-50 text-black border-b border-gray-200">
+            <tr key={lead._id} className="text-black border-b border-gray-200">
               <td className="p-3 text-sm">{lead.name}</td>
               <td className="p-3">
                 <span className={`px-2 py-1 rounded text-[10px] font-bold uppercase ${

@@ -20,10 +20,8 @@ export async function PUT(req, { params }) {
         returnDocument: 'after' 
     });
 
-    // --- ASSIGNMENT LOGIC ---
     if (updateData.assignedTo && String(updateData.assignedTo) !== String(oldLead.assignedTo)) {
       
-      // 1. Create Activity Log
       await ActivityLog.create({
         lead: id,
         action: "Agent Assigned",
@@ -31,7 +29,6 @@ export async function PUT(req, { params }) {
         details: `Lead reassigned to ${updateData.assignedTo}`
       });
 
-      // 2. Real-Time Socket Notification
       if (global.io) {
         global.io.to(updateData.assignedTo).emit("new_lead", {
           message: `New Lead Assigned: ${updatedLead.name}`,
@@ -39,8 +36,6 @@ export async function PUT(req, { params }) {
         });
       }
 
-      // 3. --- EMAIL NOTIFICATION (NODEMAILER) ---
-      // We use a test account for the project
       let testAccount = await nodemailer.createTestAccount();
       let transporter = nodemailer.createTransport({
         host: "smtp.ethereal.email",
@@ -54,7 +49,7 @@ export async function PUT(req, { params }) {
 
       let info = await transporter.sendMail({
         from: '"CRM System" <system@crm.com>',
-        to: "agent@test.com", // In a real app, you'd fetch the agent's actual email
+        to: "agent@test.com",
         subject: "New Lead Assigned!",
         text: `Hello, a new lead (${updatedLead.name}) has been assigned to you with a budget of ${updatedLead.budget.toLocaleString()} PKR.`,
         html: `<b>New Lead Assigned!</b><p>The lead <b>${updatedLead.name}</b> is now yours to handle.</p>`,
@@ -64,7 +59,6 @@ export async function PUT(req, { params }) {
       console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 
     } else {
-      // Logic for regular updates
       await ActivityLog.create({
         lead: id,
         action: "Lead Updated",

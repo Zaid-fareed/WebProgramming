@@ -2,7 +2,6 @@
 import { useState } from "react";
 
 export default function AddLeadForm({ onLeadAdded }) {
-  // 1. Ensure the state is named 'form'
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -22,17 +21,16 @@ export default function AddLeadForm({ onLeadAdded }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
-          budget: Number(form.budget), // Convert string to Number for the scoring logic
+          budget: Number(form.budget),
         }),
       });
 
       if (res.ok) {
-        // Reset form after successful submission
         setForm({ 
           name: "", email: "", phone: "", budget: "", 
           propertyInterest: "Apartment", source: "Website", notes: "" 
         });
-        onLeadAdded(); // Refresh the table
+        onLeadAdded();
       } else {
         const errorData = await res.json();
         alert("Error: " + errorData.error);
@@ -43,13 +41,13 @@ export default function AddLeadForm({ onLeadAdded }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl shadow-md grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
       <h3 className="col-span-full text-lg font-bold text-gray-700 border-b pb-2">Add New Property Lead</h3>
       
       <input
         type="text"
         placeholder="Client Name"
-        className="p-2 border rounded text-black"
+        className="p-2 rounded text-black"
         value={form.name}
         onChange={(e) => setForm({ ...form, name: e.target.value })}
         required
@@ -58,7 +56,7 @@ export default function AddLeadForm({ onLeadAdded }) {
       <input
         type="email"
         placeholder="Email Address"
-        className="p-2 border rounded text-black"
+        className="p-2 rounded text-black"
         value={form.email}
         onChange={(e) => setForm({ ...form, email: e.target.value })}
         required
@@ -67,7 +65,7 @@ export default function AddLeadForm({ onLeadAdded }) {
       <input
         type="text"
         placeholder="Phone (e.g. 923001234567)"
-        className="p-2 border rounded text-black"
+        className="p-2 rounded text-black"
         value={form.phone}
         onChange={(e) => setForm({ ...form, phone: e.target.value })}
         required
@@ -76,14 +74,14 @@ export default function AddLeadForm({ onLeadAdded }) {
       <input
         type="number"
         placeholder="Budget (PKR)"
-        className="p-2 border rounded text-black"
+        className="p-2 rounded text-black"
         value={form.budget}
         onChange={(e) => setForm({ ...form, budget: e.target.value })}
         required
       />
 
       <select 
-        className="p-2 border rounded text-black"
+        className="p-2 rounded text-black"
         value={form.propertyInterest}
         onChange={(e) => setForm({ ...form, propertyInterest: e.target.value })}
       >
@@ -94,7 +92,7 @@ export default function AddLeadForm({ onLeadAdded }) {
       </select>
 
       <select 
-        className="p-2 border rounded text-black"
+        className="p-2 rounded text-black"
         value={form.source}
         onChange={(e) => setForm({ ...form, source: e.target.value })}
       >

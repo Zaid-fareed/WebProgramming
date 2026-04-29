@@ -7,7 +7,6 @@ export async function GET(req, { params }) {
     await connectMongo();
     const { id } = await params;
 
-    // Fetch logs and join with the User model to see names
     const logs = await ActivityLog.find({ lead: id })
       .populate("performedBy", "name")
       .sort({ createdAt: -1 });

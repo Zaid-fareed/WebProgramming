@@ -9,12 +9,10 @@ export default function AgentDashboard() {
   const { data: session } = useSession();
   const [leads, setLeads] = useState([]);
 
-  // 1. Define fetchLeads INSIDE the component
   const fetchLeads = async () => {
     try {
       const res = await fetch("/api/leads");
       const data = await res.json();
-      // Ensure we handle cases where data might not be an array
       setLeads(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Failed to fetch leads:", error);
@@ -22,19 +20,16 @@ export default function AgentDashboard() {
   };
 
   useEffect(() => {
-    // 2. Now fetchLeads is defined and can be called safely
     fetchLeads();
 
     if (session?.user?.id) {
       const socket = io();
 
-      // Join personal room for real-time updates
       socket.emit("join", session.user.id);
 
-      // Listen for new assignments
       socket.on("new_lead", (data) => {
         alert("🔔 " + data.message);
-        fetchLeads(); // Refresh table automatically
+        fetchLeads();
       });
 
       return () => socket.disconnect();

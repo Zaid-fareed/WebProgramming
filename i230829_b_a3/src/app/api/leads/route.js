@@ -13,20 +13,17 @@ export async function POST(req) {
 
     const data = await req.json();
 
-    // --- AUTO-SCORING LOGIC (Level 2 Requirement) ---
     let score = "Low";
     const budget = Number(data.budget);
-    if (budget > 20000000) score = "High"; // > 20M
-    else if (budget >= 10000000) score = "Medium"; // 10M - 20M
+    if (budget > 20000000) score = "High";
+    else if (budget >= 10000000) score = "Medium";
 
     const newLead = await Lead.create({
       ...data,
       score,
-      // If an agent creates it, auto-assign to them; if admin, leave unassigned
       assignedTo: session.user.role === "Agent" ? session.user.id : data.assignedTo || null
     });
 
-    // --- ACTIVITY LOG (Level 3 Requirement) ---
     await ActivityLog.create({
       lead: newLead._id,
       action: "Lead Created",
