@@ -2,29 +2,28 @@ import mongoose from "mongoose";
 
 const LeadSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  email: { type: String },
-  phone: { type: String },
-  company: { type: String },
-  status: {
-    type: String,
-    enum: ["New", "Contacted", "Qualified", "Lost", "Won"],
-    default: "New",
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  propertyInterest: { type: String, required: true },
+  budget: { type: Number, required: true },
+  score: { 
+    type: String, 
+    enum: ["High", "Medium", "Low"], 
+    default: "Low" 
   },
-  source: {
-    type: String,
-    enum: ["Website", "Referral", "Social Media", "Walk-in", "Phone", "Other"],
-    default: "Other",
+  status: { 
+    type: String, 
+    enum: ["New", "Contacted", "Interested", "Closed", "Lost"], 
+    default: "New" 
   },
-  notes: { type: String },
-  budget: { type: Number },
-  score: {
-    type: String,
-    enum: ["High", "Medium", "Low"],
-    default: "Low",
+  source: { 
+    type: String, 
+    enum: ["Facebook", "Instagram", "Website", "Walk-in"], 
+    default: "Website" 
   },
-  propertyInterest: { type: String },
+  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   followUpDate: { type: Date },
-  assignedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  notes: { type: String },
 }, { timestamps: true });
 
 export default mongoose.models.Lead || mongoose.model("Lead", LeadSchema);
