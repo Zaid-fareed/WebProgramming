@@ -2,15 +2,29 @@ const { createServer } = require("http");
 const { parse } = require("url");
 const next = require("next");
 const { Server } = require("socket.io");
+const rateLimit = require('express-rate-limit');
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
+// Define the limiter
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute
+  max: 50, 
+  message: "Too many requests, please try again later.",
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: (req) => req.url.includes('/admin') 
+});
+
 app.prepare().then(() => {
   const httpServer = createServer((req, res) => {
-    const parsedUrl = parse(req.url, true);
-    handle(req, res, parsedUrl);
+    // FIX: Apply the limiter manually to each request
+    limiter(req, res, () => {
+      const parsedUrl = parse(req.url, true);
+      handle(req, res, parsedUrl);
+    });
   });
 
   const io = new Server(httpServer);
@@ -18,7 +32,6 @@ app.prepare().then(() => {
   io.on("connection", (socket) => {
     console.log("Client connected:", socket.id);
 
-    // Join a room based on User ID so we can send private updates to specific agents
     socket.on("join", (userId) => {
       socket.join(userId);
       console.log(`User ${userId} joined their private room`);
