@@ -1,29 +1,37 @@
-import { createServer } from "http";
-import next from "next";
-import { Server } from "socket.io";
+const { createServer } = require("http");
+const { parse } = require("url");
+const next = require("next");
+const { Server } = require("socket.io");
 
 const dev = process.env.NODE_ENV !== "production";
-const hostname = "localhost";
-const port = 3000;
-const app = next({ dev, hostname, port });
-const handler = app.getRequestHandler();
+const app = next({ dev });
+const handle = app.getRequestHandler();
 
 app.prepare().then(() => {
-  const httpServer = createServer(handler);
+  const httpServer = createServer((req, res) => {
+    const parsedUrl = parse(req.url, true);
+    handle(req, res, parsedUrl);
+  });
 
   const io = new Server(httpServer);
 
   io.on("connection", (socket) => {
-    socket.on("new-lead", (data) => {
-      io.emit("lead-added", data);
+    console.log("Client connected:", socket.id);
+
+    // Join a room based on User ID so we can send private updates to specific agents
+    socket.on("join", (userId) => {
+      socket.join(userId);
+      console.log(`User ${userId} joined their private room`);
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Client disconnected");
     });
   });
 
-  httpServer
-    .once("error", (err) => {
-      process.exit(1);
-    })
-    .listen(port, () => {
-      console.log(`> Ready on http://${hostname}:${port}`);
-    });
+  global.io = io;
+
+  httpServer.listen(3000, () => {
+    console.log("> Ready on http://localhost:3000");
+  });
 });

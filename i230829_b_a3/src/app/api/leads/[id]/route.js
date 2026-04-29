@@ -8,9 +8,7 @@ import { authOptions } from "../../auth/[...nextauth]/route";
 export async function GET(req, { params }) {
   try {
     await connectMongo();
-    // UNWRAP PARAMS FIRST
     const { id } = await params; 
-    
     const lead = await Lead.findById(id).populate("assignedTo", "name");
     return NextResponse.json(lead);
   } catch (error) {
@@ -24,13 +22,10 @@ export async function PUT(req, { params }) {
     const session = await getServerSession(authOptions);
     if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    // UNWRAP PARAMS FIRST
     const { id } = await params; 
     const updateData = await req.json();
-    
     const oldLead = await Lead.findById(id);
 
-    // Updated Mongoose syntax to avoid the warning you saw
     const updatedLead = await Lead.findByIdAndUpdate(id, updateData, { 
         returnDocument: 'after' 
     });
@@ -43,6 +38,16 @@ export async function PUT(req, { params }) {
         performedBy: session.user.id,
         details: `Lead reassigned from ${oldLead.assignedTo || 'Unassigned'} to ${updateData.assignedTo}`
       });
+
+      // --- REAL-TIME NOTIFICATION (Socket.io) ---
+      // This tells the specific agent that a lead was just assigned to them
+      if (global.io) {
+        global.io.to(updateData.assignedTo).emit("new_lead", {
+          message: `New Lead Assigned: ${updatedLead.name}`,
+          leadId: id
+        });
+      }
+      
     } else {
       await ActivityLog.create({
         lead: id,
@@ -62,9 +67,7 @@ export async function PUT(req, { params }) {
 export async function DELETE(req, { params }) {
   try {
     await connectMongo();
-    // UNWRAP PARAMS FIRST
     const { id } = await params; 
-    
     await Lead.findByIdAndDelete(id);
     return NextResponse.json({ message: "Lead deleted" });
   } catch (error) {
