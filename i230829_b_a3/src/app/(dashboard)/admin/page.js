@@ -42,7 +42,7 @@ export default function AdminDashboard() {
 
               <div className="mt-8">
                 <h2 className="text-xl font-semibold mb-4 text-gray-700">Lead Inventory</h2>
-                <LeadTable leads={leads} onUpdate={fetchLeads} />
+                <LeadTable leads={leads} onUpdate={fetchLeads} isAdmin={true} />
               </div>
             </div>
           </div>
